@@ -1,0 +1,61 @@
+CREATE TABLE Registration (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    mobile_number VARCHAR(10) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100) DEFAULT 'system',
+    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_by VARCHAR(100) DEFAULT 'system'
+);
+
+DELIMITER //
+CREATE PROCEDURE CreateUser(
+    IN p_first_name VARCHAR(100),
+    IN p_last_name VARCHAR(100),
+    IN p_mobile_number VARCHAR(10),
+    IN p_password_hash VARCHAR(255),
+    IN p_created_by VARCHAR(100)
+)
+BEGIN
+    INSERT INTO Registration (first_name, last_name, mobile_number, password_hash, created_by)
+    VALUES (p_first_name, p_last_name, p_mobile_number, p_password_hash, p_created_by);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE SelectUsers()
+BEGIN
+    SELECT * FROM Registration;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE UpdateUser(
+    IN p_id INT,
+    IN p_first_name VARCHAR(100),
+    IN p_last_name VARCHAR(100),
+    IN p_mobile_number VARCHAR(10),
+    IN p_updated_by VARCHAR(100)
+)
+BEGIN
+    UPDATE Registration
+    SET first_name = p_first_name,
+        last_name = p_last_name,
+        mobile_number = p_mobile_number,
+        updated_by = p_updated_by,
+        updated_date = UTC_TIMESTAMP()
+    WHERE id = p_id;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE DeleteUser(IN p_id INT)
+BEGIN
+    DELETE FROM Registration WHERE id = p_id;
+END //
+DELIMITER ;
+
+
+
